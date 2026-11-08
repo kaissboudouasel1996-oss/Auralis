@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Auralis" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/auralis_bg</item>
+        <item name="android:statusBarColor">@color/auralis_bg</item>
+        <item name="android:navigationBarColor">@color/auralis_bg</item>
+    </style>
+
+    <style name="Theme.Auralis.Ambient" parent="android:Theme.Material.NoActionBar.Fullscreen">
+        <item name="android:windowBackground">@color/auralis_bg</item>
+    </style>
+</resources>
