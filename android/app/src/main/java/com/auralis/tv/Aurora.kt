@@ -24,7 +24,7 @@ import kotlin.math.sin
  * Slowly drifting aurora light with a large clock.
  * The clock nudges a few pixels every minute so a QLED panel never shows a static image.
  */
-class AuroraView(context: Context) : View(context) {
+class AuroraView(context: Context, private val showClock: Boolean = true) : View(context) {
 
     private val colors = intArrayOf(
         0xFF2DE2E6.toInt(), // cyan
@@ -62,15 +62,17 @@ class AuroraView(context: Context) : View(context) {
             canvas.drawCircle(cx, cy, r, blob)
         }
 
-        val now = Date()
-        val minute = System.currentTimeMillis() / 60000
-        val dx = ((minute * 53) % 81 - 40).toFloat()
-        val dy = ((minute * 29) % 61 - 30).toFloat()
+        if (showClock) {
+            val now = Date()
+            val minute = System.currentTimeMillis() / 60000
+            val dx = ((minute * 53) % 81 - 40).toFloat()
+            val dy = ((minute * 29) % 61 - 30).toFloat()
 
-        timePaint.textSize = h * 0.26f
-        datePaint.textSize = h * 0.045f
-        canvas.drawText(timeFmt.format(now), w / 2 + dx, h * 0.52f + dy, timePaint)
-        canvas.drawText(dateFmt.format(now), w / 2 + dx, h * 0.52f + h * 0.09f + dy, datePaint)
+            timePaint.textSize = h * 0.26f
+            datePaint.textSize = h * 0.045f
+            canvas.drawText(timeFmt.format(now), w / 2 + dx, h * 0.52f + dy, timePaint)
+            canvas.drawText(dateFmt.format(now), w / 2 + dx, h * 0.52f + h * 0.09f + dy, datePaint)
+        }
 
         postInvalidateDelayed(40)
     }

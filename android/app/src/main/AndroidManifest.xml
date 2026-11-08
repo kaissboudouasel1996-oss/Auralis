@@ -33,6 +33,21 @@
             </intent-filter>
         </activity>
 
+        <!-- Auralis home screen. Becomes the TV's home from Pro tools > Launcher. -->
+        <activity
+            android:name=".LauncherActivity"
+            android:exported="true"
+            android:label="Auralis Home"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:stateNotNeeded="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".AmbientActivity"
             android:exported="false"

@@ -224,6 +224,7 @@ fun HomeScreen(toast: Toaster) {
         }
 
         ButtonRow {
+            TvButton("Open launcher", primary = true) { ctx.startActivity(Intent(ctx, LauncherActivity::class.java)) }
             TvButton("Ambient clock") { ctx.startActivity(Intent(ctx, AmbientActivity::class.java)) }
             TvButton("Developer options") {
                 openSettings(ctx, Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS, toast)
@@ -512,6 +513,26 @@ fun ToolsScreen(toast: Toaster) {
     ) {
         Title("Pro tools", "Things that normally hide behind Developer options")
         AdbWarning()
+
+        Heading("LAUNCHER (the Auralis home screen)")
+        ButtonRow {
+            TvButton("Open launcher") { ctx.startActivity(Intent(ctx, LauncherActivity::class.java)) }
+            TvButton("Make it my home screen", primary = true) {
+                scope.launch {
+                    val r = HomeSetter.apply(ctx)
+                    toast(
+                        if (r.isSuccess) "Done. Press the Home button to see it."
+                        else r.exceptionOrNull()?.message ?: "ADB error",
+                    )
+                }
+            }
+            TvButton("Restore original home") {
+                scope.launch {
+                    val r = HomeSetter.restore(ctx)
+                    toast(if (r.isSuccess) "Original home screen restored" else r.exceptionOrNull()?.message ?: "ADB error")
+                }
+            }
+        }
 
         Heading("SPEED: SYSTEM ANIMATIONS")
         ButtonRow {

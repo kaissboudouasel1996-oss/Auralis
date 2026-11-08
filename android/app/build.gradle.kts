@@ -12,8 +12,8 @@ android {
         applicationId = "com.auralis.tv"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
 
     // Fixed key so every CI build has the same signature and updates install over the old app.

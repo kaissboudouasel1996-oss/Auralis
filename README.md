@@ -16,6 +16,7 @@ A premium toolkit for Android TV, made for the Xiaomi TV 65" QLED. Built for the
   - screenshot to the Pictures folder
   - restart the TV
   - shortcuts to Developer options, Wi-Fi, Display, Storage, Apps, Accessibility, Date and time
+- **Launcher**: a full home screen in the same style. Big clock and greeting, a Favorites row with each app's TV banner (hold OK on any app to pin, unpin or reorder it), and a grid of all your apps. Make it your home screen from **Pro tools > Launcher > Make it my home screen** (needs ADB), and put the original back with **Restore original home**.
 - **Network**: speed test (download Mbps and latency) with a plain verdict on whether 4K streaming will be smooth.
 - **Ambient clock**: full-screen aurora with a large clock. It drifts a few pixels every minute so a QLED panel never shows a static image. The same aurora is available as a system screensaver.
 

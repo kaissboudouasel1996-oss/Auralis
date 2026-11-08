@@ -1,6 +1,9 @@
 package com.auralis.tv
 
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -75,6 +78,40 @@ object AdbManager {
             message = "Connection lost. Press Connect to reconnect."
             Result.failure(e)
         }
+    }
+}
+
+/** Makes Auralis the TV's home screen (and puts the original one back), through the TV's own ADB. */
+object HomeSetter {
+    private const val OURS = "com.auralis.tv/com.auralis.tv.LauncherActivity"
+    private const val KEY = "orig_home"
+
+    private fun sp(c: Context) = c.getSharedPreferences("auralis", Context.MODE_PRIVATE)
+    private fun homeIntent() = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+
+    /** The home screen currently in charge, unless it is already Auralis. */
+    private fun currentHome(ctx: Context): String? {
+        val ai = ctx.packageManager
+            .resolveActivity(homeIntent(), PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo ?: return null
+        if (ai.packageName == ctx.packageName || ai.packageName == "android") return null
+        return ComponentName(ai.packageName, ai.name).flattenToShortString()
+    }
+
+    private fun anyOtherHome(ctx: Context): String? =
+        ctx.packageManager.queryIntentActivities(homeIntent(), 0)
+            .map { it.activityInfo }
+            .firstOrNull { it.packageName != ctx.packageName }
+            ?.let { ComponentName(it.packageName, it.name).flattenToShortString() }
+
+    suspend fun apply(ctx: Context): Result<String> {
+        currentHome(ctx)?.let { sp(ctx).edit().putString(KEY, it).apply() }
+        return AdbManager.run("cmd package set-home-activity --user 0 $OURS")
+    }
+
+    suspend fun restore(ctx: Context): Result<String> {
+        val orig = sp(ctx).getString(KEY, null) ?: anyOtherHome(ctx)
+            ?: return Result.failure(IllegalStateException("No original home screen found"))
+        return AdbManager.run("cmd package set-home-activity --user 0 $orig")
     }
 }
 
